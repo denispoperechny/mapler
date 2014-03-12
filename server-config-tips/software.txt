@@ -1,0 +1,5 @@
+Debian Linux
+Apache2
+wsgi_mod
+django
+mysql

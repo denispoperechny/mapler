@@ -1,0 +1,19 @@
+
+1) Put ../sources/django to /var/www/ directory on the server
+
+2) Add to /etc/apache2/apache2.conf :
+WSGIPythonPath /var/www/django
+
+3) Example of /etc/apache2/sites-available/default
+
+<VirtualHost *:80>
+	ServerAdmin webmaster@localhost
+
+	DocumentRoot /var/www/django/mapler-public-html
+
+	ErrorLog /var/www/logs/error.log
+	CustomLog /var/www/logs/access.log combined
+	
+	WSGIScriptAlias / /var/www/django/mapler/wsgi.py
+
+</VirtualHost>

@@ -16,7 +16,7 @@ framework.
 import os
 
 #os.environ.setdefault("DJANGO_SETTINGS_MODULE", "mapler.settings")
-os.environ['DJANGO_SETTINGS_MODULE'] = 'mysite.settings'
+os.environ['DJANGO_SETTINGS_MODULE'] = 'mapler.settings'
 
 # This application object is used by any WSGI server configured to use this
 # file. This includes Django's development server, if the WSGI_APPLICATION

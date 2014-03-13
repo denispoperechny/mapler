@@ -14,4 +14,10 @@ urlpatterns = patterns('',
 
     # Uncomment the next line to enable the admin:
     # url(r'^admin/', include(admin.site.urls)),
+
+    # Default app
+    url(r'^$', 'map.views.index', name='index'),
+
+    url(r'^map/', include('map.urls'))
+
 )

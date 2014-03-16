@@ -1,5 +1,6 @@
-Debian Linux
+Debian Linux 7.4
 Apache2
+Python 2.7.3
 wsgi_mod
-django
+django 1.4.5
 mysql

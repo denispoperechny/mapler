@@ -115,6 +115,7 @@ TEMPLATE_DIRS = (
     # Don't forget to use absolute paths, not relative paths.
     #'/var/www/django/templates'
     PROJECT_PATH + '/../templates/'
+    #'/var/www/django/templates/'
 )
 
 INSTALLED_APPS = (

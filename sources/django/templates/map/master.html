@@ -1,14 +1,35 @@
+{% load staticfiles %}
+
+<!DOCTYPE html>
 <html>
 <head>
-<title>Mapler</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+	<title>Mapler</title>
+
+	<!-- Bootstrap styles -->
+	<link rel="stylesheet" href="{% static "bootstrap-3.1.1-dist/css/bootstrap.min.css" %}">
+	<link rel="stylesheet" href="{% static "bootstrap-3.1.1-dist/css/bootstrap-theme.min.css" %}">
+
+    <link rel="stylesheet" href="{% static "map/css/style.css" %}">
+
 </head>
 <body>
 
-<h3>Mapler</h3>
+	<h3>Mapler</h3>
 
-{% block child %}
-Default content here...
-{% endblock child %}
+	{% block child %}
+	Default content here...
+	{% endblock child %}
+
+
+	<!-- Scripts at the and to make the loading faster -->
+	<!-- JQuery CDN -->
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+	<!-- Bootstrap controls -->
+	<script src="{% static "bootstrap-3.1.1-dist/js/bootstrap.min.js" %}"></script>
 
 </body>
 </html>

@@ -1,0 +1,7 @@
+
+Directory to be populated with 
+"./mapler-manage.py collectstatic" command 
+during the apache deployment.
+(https://docs.djangoproject.com/en/1.4/howto/static-files/)
+
+Directory for the django host document root as well.

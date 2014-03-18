@@ -4,3 +4,8 @@ Python 2.7.3
 wsgi_mod
 django 1.4.5
 mysql
+JQuery
+Bootstrap 3
+
+Bootstrap markup sample:
+http://bootswatch.com/yeti

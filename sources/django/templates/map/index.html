@@ -1,7 +1,25 @@
 {% extends "map/master.html" %}
-{% load staticfiles %}
 
 {% block child %}
 <p>Hello. You're at the map index. (template)</p>
-<img src="{% static "map/images/python-django.png" %}" />
+
+<script type="text/javascript"
+	src="http://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false">
+</script>
+<script type="text/javascript">
+	function initialize() {
+		var mapOptions = {
+			center: new google.maps.LatLng(50.43, 30.56),
+			zoom: 11,
+			mapTypeId: google.maps.MapTypeId.ROADMAP
+		};
+		var map = new google.maps.Map(document.getElementById("map_canvas"),
+		mapOptions);
+	}
+
+	google.maps.event.addDomListener(window, 'load', initialize);
+</script>
+
+<div id="map_canvas" style="width:800px; height:500px"></div>
+
 {% endblock child%}

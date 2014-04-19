@@ -1,0 +1,16 @@
+References:
+https://docs.djangoproject.com/en/1.4/ref/databases/
+https://docs.djangoproject.com/en/1.4/intro/tutorial01/
+
+
+Django supports MySQL 5.0.3 and higher
+
+1) Create the db for your project first:
+CREATE DATABASE mapler_db CHARACTER SET utf8;
+
+2) Sync your applications with db
+python /var/www/djago/mapler-manage.py syncdb
+
+3) When asked - create the superuser:
+root:administrator
+

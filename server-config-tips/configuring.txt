@@ -10,6 +10,7 @@ WSGIPythonPath /var/www/django
 	ServerAdmin webmaster@localhost
 
 	DocumentRoot /var/www/django/static-deployed
+	Alias /static/admin /usr/lib/python2.7/dist-packages/django/contrib/admin/static/admin
 	Alias /static /var/www/django/static
 
 	ErrorLog /var/www/logs/error.log

@@ -24,5 +24,11 @@ def profile(request):
     })
     return HttpResponse(t.render(c))
 
+def loginSubmit(request):
+    return index(request)
+
+def createSubmit(request):
+    return index(request)
+
 def index(request):
     return login(request)

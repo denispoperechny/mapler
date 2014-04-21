@@ -8,6 +8,10 @@ from django.shortcuts import render
 from forms.LoginUserForm import LoginUserForm
 from forms.CreateUserForm import CreateUserForm
 
+from django.contrib.auth.models import User
+# from django.contrib.auth.models import UserManager
+from django.contrib.auth import authenticate
+from django.contrib.auth import login
 
 def login(request):
     errorMessage = ''
@@ -32,6 +36,8 @@ def create(request):
         if form.is_valid():
             errorMessage = tryCreate(form.cleaned_data['login'], form.cleaned_data['password'], form.cleaned_data['mail'])
             if errorMessage == '':
+                errorMessage = tryLogin(login, passwd, request)
+            if errorMessage == '':
                 return index(request)
     else:
         form = CreateUserForm()
@@ -51,8 +57,27 @@ def profile(request):
 def index(request):
     return HttpResponseRedirect("/")
 
-def tryLogin(login, passwd):
-    return "Not implemented. Login: "+login
+def tryLogin(login, passwd, request):
+    errorMessage = ''
+    user = authenticate(username=login, password=passwd)
+    if user is not None:
+        login(request, user)
+    else:
+        errorMessage = "Your username and password were incorrect"
+    
+    return errorMessage
 
 def tryCreate(login, passwd, mail=''):
-    return "Not implemented. Login: "+login
+    errorMessage = ''
+    
+    # Check if user already exists
+    existedUsers = User.objects.get(username__exact='john')
+    if len(existedUsers) != 0:
+        errorMessage = 'User already exists with specified login: '+login
+
+    # Create user
+    if errorMessage == '':
+        user = User.objects.create_user(login, mail, passwd)
+        user.save()
+
+    return errorMessage

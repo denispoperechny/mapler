@@ -10,31 +10,35 @@ from forms.CreateUserForm import CreateUserForm
 
 
 def login(request):
+    errorMessage = ''
     if request.method == 'POST': # If the form has been submitted...
         form = LoginUserForm(request.POST) # A form bound to the POST data
         if form.is_valid(): # All validation rules pass
-            # Process the data in form.cleaned_data
-            # ...
-            return index(request) # Redirect after POST
+            errorMessage = tryLogin(form.cleaned_data['login'], form.cleaned_data['password'])
+            if errorMessage == '':
+                return index(request) # Redirect after POST
     else:
         form = LoginUserForm() # An unbound form
 
     return render(request, 'users/login.html', {
-        'form': form,
+        'userForm': form,
+        'userError': errorMessage,
     })
 
 def create(request):
-    if request.method == 'POST': # If the form has been submitted...
-        form = CreateUserForm(request.POST) # A form bound to the POST data
-        if form.is_valid(): # All validation rules pass
-            # Process the data in form.cleaned_data
-            # ...
-            return index(request) # Redirect after POST
+    errorMessage = ''
+    if request.method == 'POST':
+        form = CreateUserForm(request.POST)
+        if form.is_valid():
+            errorMessage = tryCreate(form.cleaned_data['login'], form.cleaned_data['password'], form.cleaned_data['mail'])
+            if errorMessage == '':
+                return index(request)
     else:
-        form = CreateUserForm() # An unbound form
+        form = CreateUserForm()
 
     return render(request, 'users/create.html', {
-        'form': form,
+        'userForm': form,
+        'userError': errorMessage,
     })
 
 def profile(request):
@@ -44,11 +48,11 @@ def profile(request):
     })
     return HttpResponse(t.render(c))
 
-# def loginSubmit(request):
-#     return index(request)
-
-# def createSubmit(request):
-#     return index(request)
-
 def index(request):
     return HttpResponseRedirect("/")
+
+def tryLogin(login, passwd):
+    return "Not implemented. Login: "+login
+
+def tryCreate(login, passwd, mail=''):
+    return "Not implemented. Login: "+login

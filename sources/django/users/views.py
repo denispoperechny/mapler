@@ -54,6 +54,10 @@ def profile(request):
     })
     return HttpResponse(t.render(c))
 
+def logout(request):
+    django.contrib.auth.logout(request)
+    return index(request)
+
 def index(request):
     return HttpResponseRedirect("/")
 

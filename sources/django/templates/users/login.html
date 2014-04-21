@@ -1,3 +1,7 @@
 <p>
-	Login page
+	<h3>Login to Mapler</h3>
+	<form action="/users/login/" method="post">{% csrf_token %}
+	{{ form.as_p }}
+	<input type="submit" value="Submit" />
+	</form>
 </p>

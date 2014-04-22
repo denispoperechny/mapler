@@ -5,8 +5,12 @@ from django.template import Context, loader
 
 
 def index(request):
-    t = loader.get_template('map/index.html')
-    c = Context({
-    #    'latest_poll_list': latest_poll_list,
-    })
-    return HttpResponse(t.render(c))
+	userName = None
+	if request.user.is_authenticated():
+		userName = request.user.username
+
+	t = loader.get_template('map/index.html')
+	c = Context({
+		'userName': userName,
+	})
+	return HttpResponse(t.render(c))

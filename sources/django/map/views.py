@@ -4,7 +4,7 @@ from django.http import HttpResponse
 from django.template import Context, loader
 
 
-def index(request):
+def overview(request):
 	userName = None
 	if request.user.is_authenticated():
 		userName = request.user.username
@@ -14,3 +14,9 @@ def index(request):
 		'userName': userName,
 	})
 	return HttpResponse(t.render(c))
+
+def managePoints(request):
+	return index(request)
+
+def index(request):
+	return overview(request)

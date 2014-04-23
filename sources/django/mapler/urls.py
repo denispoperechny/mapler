@@ -19,6 +19,6 @@ urlpatterns = patterns('',
     url(r'^users/', include('users.urls')),
 
     # Default app
-    url(r'^', include('map.urls'))
+    url(r'^$', include('map.urls'))
 
 )

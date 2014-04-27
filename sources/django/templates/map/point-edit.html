@@ -1,0 +1,12 @@
+<div class="point">
+
+	<form action="/map/submit-point/" method="post">{% csrf_token %}
+		{{ form.as_p }}
+		<input type="submit" value="Save">
+	</form>
+
+	{% if mode == "edit" %}
+		<a href="/map/delete-point/#point-id">Delete Point</a><br />
+	{% endif %}
+
+</div>

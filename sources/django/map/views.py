@@ -2,6 +2,11 @@
 
 from django.http import HttpResponse, HttpResponseRedirect
 from django.template import Context, loader
+from forms.AddPointForm import AddPointForm
+from models import Point
+from django.template import RequestContext
+from django.template.loader import render_to_string
+from django.core import serializers
 
 def getUserName(request):
 	userName = None
@@ -25,11 +30,35 @@ def managePoints(request):
 	if userName == None:
 		return HttpResponseRedirect("/")
 
+	addPointForm = getAddPointForm(request)
+	
 	t = loader.get_template('map/manage-points.html')
 	c = Context({
 		'userName': userName,
+		'addingPointHtmlData' : addPointForm,
+		'pointsData': serializers.serialize('json', Point.objects.all()),
 	})
 	return HttpResponse(t.render(c))
+
+def submitPoint(request):
+	userName = getUserName(request)
+	if userName == None:
+		return HttpResponseRedirect("/")
+
+	form = AddPointForm(request.POST)
+	if form.is_valid():
+		maplerId = form.cleaned_data['maplerId']
+		if maplerId == -1: # new point
+			newPoint = Point(owner=request.user)
+			updatePointAccordingToForm(form, newPoint)
+			newPoint.save()
+		else:
+			if point.owner.username == userName:
+				point = Point.objects.get(pk=maplerId)
+				updatePointAccordingToForm(form, point)
+				point.save()
+
+	return HttpResponseRedirect("/map/manage-points/")
 
 def index(request):
 	userName = getUserName(request)
@@ -41,3 +70,22 @@ def index(request):
 		# 'userName': userName,
 	})
 	return HttpResponse(t.render(c))
+
+def updatePointAccordingToForm(form, point):
+	point.description = form.cleaned_data['description']
+	point.latitude = form.cleaned_data['latitude']
+	point.longitude = form.cleaned_data['longitude']
+
+
+def getAddPointForm(request):
+	addForm = AddPointForm(initial={'maplerId': -1})
+	# editForm = LoginUserForm()
+	#t = loader.get_template('map/point-edit.html')
+	c = Context({ 
+		# 'object_list': SomeModel.objects.all(),
+		'mode': 'add',
+		'form': addForm,
+		})
+	# rendered = t.render(c)
+	rendered = render_to_string('map/point-edit.html', c, context_instance=RequestContext(request))
+	return rendered

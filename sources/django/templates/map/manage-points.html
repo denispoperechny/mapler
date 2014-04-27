@@ -1,12 +1,63 @@
 {% extends "map/views-manager.html" %}
 
 {% block views-manager-child %}
+
 <p>Points Management</p>
+<div id="map_canvas" style="width:800px; height:500px"></div>
+<div id="point-editing-zone"></div>
+
+<div id="editingPointHtmlData" style="display: none;">{{editingPointHtmlData}}</div>
+<div id="addingPointHtmlData" style="display: none;">{{addingPointHtmlData}}</div>
 
 <script type="text/javascript"
 	src="http://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false">
 </script>
+
 <script type="text/javascript">
+	var pointEditor = {
+		showEditor: function (pointId) {
+			$( "div#point-editing-zone" ).html($( "div#editingPointHtmlData" ).html());
+
+			// set form values
+		},
+		showAddingForm: function (latitude, longitude) {
+			$( "div#point-editing-zone" ).html($( "div#addingPointHtmlData" ).html());
+			$( "div#point-editing-zone" ).find( "input#id_latitude" ).val(latitude)
+			$( "div#point-editing-zone" ).find( "input#id_longitude" ).val(longitude)
+		}
+	}
+</script>
+
+<script type="text/javascript">
+	// To be filled on server side
+	//var pointsData = [ {Id: 111, Longitude: 30.56, Latitude: 50.43, Description: "Test"} ];
+	var pointsData = [] ;
+
+	function loadPointsData() {
+
+	}
+
+	function buildPoints(map) {
+		pointsData.forEach(function(entry) {
+			var id = entry.Id;
+			var lng = entry.Longitude;
+			var lat = entry.Latitude;
+			var title = entry.Description;
+
+			var marker = new google.maps.Marker({
+				position: new google.maps.LatLng(lat, lng),
+				map: map,
+				title: title
+			});
+			marker.mapler_id = id;
+
+			google.maps.event.addListener(marker, 'click', function() {
+				pointEditor.showEditor(marker.mapler_id);
+			});
+    		
+		});	  
+	}
+
 	function initialize() {
 		var mapOptions = {
 			center: new google.maps.LatLng(50.43, 30.56),
@@ -20,22 +71,15 @@
 		    var latitude = event.latLng.lat();
 		    var longitude = event.latLng.lng();
 
-		    var marker = new google.maps.Marker({
-			    position: new google.maps.LatLng(latitude, longitude),
-			    map: map,
-			    title:"Created!"
-				});
+		    pointEditor.showAddingForm(latitude, longitude);
+		});
 
-		    google.maps.event.addListener(marker, 'click', function() {
-		    	marker.setMap(null);
-		  		});
-
-		    });
+		loadPointsData();
+		buildPoints(map);
 	}
 
 	google.maps.event.addDomListener(window, 'load', initialize);
 </script>
 
-<div id="map_canvas" style="width:800px; height:500px"></div>
 
 {% endblock views-manager-child %}

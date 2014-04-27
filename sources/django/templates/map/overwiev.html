@@ -1,0 +1,41 @@
+{% extends "map/views-manager.html" %}
+
+{% block views-manager-child %}
+<p>Map Overview</p>
+
+<script type="text/javascript"
+	src="http://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false">
+</script>
+<script type="text/javascript">
+	function initialize() {
+		var mapOptions = {
+			center: new google.maps.LatLng(50.43, 30.56),
+			zoom: 11,
+			mapTypeId: google.maps.MapTypeId.ROADMAP
+		};
+		var map = new google.maps.Map(document.getElementById("map_canvas"),
+		mapOptions);
+
+		google.maps.event.addListener(map, "click", function (event) {
+		    var latitude = event.latLng.lat();
+		    var longitude = event.latLng.lng();
+
+		    var marker = new google.maps.Marker({
+			    position: new google.maps.LatLng(latitude, longitude),
+			    map: map,
+			    title:"Created!"
+				});
+
+		    google.maps.event.addListener(marker, 'click', function() {
+		    	marker.setMap(null);
+		  		});
+
+		    });
+	}
+
+	google.maps.event.addDomListener(window, 'load', initialize);
+</script>
+
+<div id="map_canvas" style="width:800px; height:500px"></div>
+
+{% endblock views-manager-child %}

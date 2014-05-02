@@ -19,7 +19,8 @@
 	var pointEditor = {
 		showInfo: function (pointId) {
 			var point = null;
-			pointsData.forEach(function(entry) {
+			//pointsData.forEach(function(entry) {
+			$.each(pointsData, function( index, entry ) {
 				if (entry.id == pointId)
 					point = entry;
 			});

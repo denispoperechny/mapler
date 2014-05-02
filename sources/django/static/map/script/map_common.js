@@ -1,5 +1,6 @@
+
 function buildPoints(map, onPointClick) {
-	pointsData.forEach(function(entry) {
+	$.each(pointsData, function( index, entry ) {
 		var id = entry.id;
 		var lng = entry.longitude;
 		var lat = entry.latitude;

@@ -1,12 +1,19 @@
 <div class="point">
+	<h3>
+		{% if mode == "edit" %}
+			Edit Point
+		{% else %}
+			Add New Point
+		{% endif %}
+	</h3>
+
+	{% if mode == "edit" %}
+		<a id="delete-point-button" href="/map/delete-point/%point-id%">Delete Point</a><br />
+	{% endif %}
 
 	<form action="/map/submit-point/" method="post">{% csrf_token %}
 		{{ form.as_p }}
 		<input type="submit" value="Save">
 	</form>
-
-	{% if mode == "edit" %}
-		<a href="/map/delete-point/#point-id">Delete Point</a><br />
-	{% endif %}
 
 </div>

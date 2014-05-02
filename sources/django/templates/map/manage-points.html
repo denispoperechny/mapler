@@ -16,38 +16,56 @@
 <script type="text/javascript">
 	var pointEditor = {
 		showEditor: function (pointId) {
+			var point = null;
+			pointsData.forEach(function(entry) {
+				if (entry.id == pointId)
+					point = entry;
+			});
+
+			if (point == null)
+				return;
+
 			$( "div#point-editing-zone" ).html($( "div#editingPointHtmlData" ).html());
 
-			// set form values
+			$( "div#point-editing-zone" ).find( "input#id_latitude" ).val(point.latitude);
+			$( "div#point-editing-zone" ).find( "input#id_longitude" ).val(point.longitude);
+			$( "div#point-editing-zone" ).find( "input#id_description" ).val(point.description);
+			$( "div#point-editing-zone" ).find( "a#delete-point-button" ).attr('href', '/map/delete-point/' + point.id +'/');
+
 		},
 		showAddingForm: function (latitude, longitude) {
 			$( "div#point-editing-zone" ).html($( "div#addingPointHtmlData" ).html());
-			$( "div#point-editing-zone" ).find( "input#id_latitude" ).val(latitude)
-			$( "div#point-editing-zone" ).find( "input#id_longitude" ).val(longitude)
+			$( "div#point-editing-zone" ).find( "input#id_latitude" ).val(latitude);
+			$( "div#point-editing-zone" ).find( "input#id_longitude" ).val(longitude);
 		}
 	}
 </script>
 
 <script type="text/javascript">
 	// To be filled on server side
-	//var pointsData = [ {Id: 111, Longitude: 30.56, Latitude: 50.43, Description: "Test"} ];
 	var pointsData = [] ;
 
-	function loadPointsData() {
+	function loadPointsData(callback) {
+		$.getJSON( "/data/points-by-user/{{userName}}/", function( data ) {
+			pointsData = data;
+			callback();
+		});
 
 	}
 
 	function buildPoints(map) {
 		pointsData.forEach(function(entry) {
-			var id = entry.Id;
-			var lng = entry.Longitude;
-			var lat = entry.Latitude;
-			var title = entry.Description;
+			var id = entry.id;
+			var lng = entry.longitude;
+			var lat = entry.latitude;
+			var title = entry.description;
+			var owner = entry.owner;
+			var creationDate = entry.creationDate;
 
 			var marker = new google.maps.Marker({
 				position: new google.maps.LatLng(lat, lng),
 				map: map,
-				title: title
+				title: owner + '\n' + creationDate + '\n' + title
 			});
 			marker.mapler_id = id;
 
@@ -74,8 +92,10 @@
 		    pointEditor.showAddingForm(latitude, longitude);
 		});
 
-		loadPointsData();
-		buildPoints(map);
+		loadPointsData(function() {
+			buildPoints(map);
+		});
+		
 	}
 
 	google.maps.event.addDomListener(window, 'load', initialize);

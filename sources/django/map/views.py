@@ -29,14 +29,12 @@ def managePoints(request):
 	userName = getUserName(request)
 	if userName == None:
 		return HttpResponseRedirect("/")
-
-	addPointForm = getAddPointForm(request)
 	
 	t = loader.get_template('map/manage-points.html')
 	c = Context({
 		'userName': userName,
-		'addingPointHtmlData' : addPointForm,
-		'pointsData': serializers.serialize('json', Point.objects.all()),
+		'addingPointHtmlData' : getAddPointForm(request),
+		'editingPointHtmlData': getEditPointForm(request),
 	})
 	return HttpResponse(t.render(c))
 
@@ -86,6 +84,14 @@ def getAddPointForm(request):
 		'mode': 'add',
 		'form': addForm,
 		})
-	# rendered = t.render(c)
+	rendered = render_to_string('map/point-edit.html', c, context_instance=RequestContext(request))
+	return rendered
+
+def getEditPointForm(request):
+	editForm = AddPointForm(initial={'maplerId': -1})
+	c = Context({ 
+		'mode': 'edit',
+		'form': editForm,
+		})
 	rendered = render_to_string('map/point-edit.html', c, context_instance=RequestContext(request))
 	return rendered

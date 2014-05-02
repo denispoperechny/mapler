@@ -6,4 +6,5 @@ urlpatterns = patterns('',
     url(r'^overview/', views.overview),
     url(r'^manage-points/', views.managePoints),
     url(r'^submit-point/', views.submitPoint),
+    url(r'^delete-point/(\d+)/$', views.deletePoint),
 )

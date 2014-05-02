@@ -58,6 +58,17 @@ def submitPoint(request):
 
 	return HttpResponseRedirect("/map/manage-points/")
 
+def deletePoint(request, pointId):
+	userName = getUserName(request)
+	if userName == None:
+		return HttpResponseRedirect("/")
+
+	point = Point.objects.get(pk=int(pointId))
+	if (point.owner.username==userName) :
+		point.delete()
+
+	return HttpResponseRedirect("/map/manage-points/")
+
 def index(request):
 	userName = getUserName(request)
 	if userName != None:

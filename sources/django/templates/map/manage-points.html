@@ -26,10 +26,11 @@
 				return;
 
 			$( "div#point-editing-zone" ).html($( "div#editingPointHtmlData" ).html());
+			$( "div#point-editing-zone" ).find( "#id_maplerId" ).val(pointId);
 
-			$( "div#point-editing-zone" ).find( "input#id_latitude" ).val(point.latitude);
-			$( "div#point-editing-zone" ).find( "input#id_longitude" ).val(point.longitude);
-			$( "div#point-editing-zone" ).find( "input#id_description" ).val(point.description);
+			$( "div#point-editing-zone" ).find( "#id_latitude" ).val(point.latitude);
+			$( "div#point-editing-zone" ).find( "#id_longitude" ).val(point.longitude);
+			$( "div#point-editing-zone" ).find( "#id_description" ).val(point.description);
 			$( "div#point-editing-zone" ).find( "a#delete-point-button" ).attr('href', '/map/delete-point/' + point.id +'/');
 
 		},
@@ -53,7 +54,15 @@
 
 	}
 
-	function buildPoints(map) {
+	function getPointOnClickCallback(pointId) {
+		pointEditor.showEditor(pointId);
+	}
+
+	function getMapOnClickCallback(latitude, longitude) {
+		pointEditor.showAddingForm(latitude, longitude);
+	}
+
+	function buildPoints(map, onPointClick) {
 		pointsData.forEach(function(entry) {
 			var id = entry.id;
 			var lng = entry.longitude;
@@ -70,7 +79,7 @@
 			marker.mapler_id = id;
 
 			google.maps.event.addListener(marker, 'click', function() {
-				pointEditor.showEditor(marker.mapler_id);
+				onPointClick(marker.mapler_id);
 			});
     		
 		});	  
@@ -89,11 +98,11 @@
 		    var latitude = event.latLng.lat();
 		    var longitude = event.latLng.lng();
 
-		    pointEditor.showAddingForm(latitude, longitude);
+		    getMapOnClickCallback(latitude, longitude);
 		});
 
 		loadPointsData(function() {
-			buildPoints(map);
+			buildPoints(map, getPointOnClickCallback);
 		});
 		
 	}

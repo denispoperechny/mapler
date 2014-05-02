@@ -22,6 +22,7 @@ def overview(request):
 	t = loader.get_template('map/overwiev.html')
 	c = Context({
 		'userName': userName,
+		'previewPointHtmlData' : getPointPreviewHtml(),
 	})
 	return HttpResponse(t.render(c))
 
@@ -51,8 +52,8 @@ def submitPoint(request):
 			updatePointAccordingToForm(form, newPoint)
 			newPoint.save()
 		else:
+			point = Point.objects.get(pk=maplerId)
 			if point.owner.username == userName:
-				point = Point.objects.get(pk=maplerId)
 				updatePointAccordingToForm(form, point)
 				point.save()
 
@@ -105,4 +106,11 @@ def getEditPointForm(request):
 		'form': editForm,
 		})
 	rendered = render_to_string('map/point-edit.html', c, context_instance=RequestContext(request))
+	return rendered
+
+def getPointPreviewHtml():
+	c = Context({ 
+		#'mode': 'edit',
+		})
+	rendered = render_to_string('map/point-view.html', c)
 	return rendered

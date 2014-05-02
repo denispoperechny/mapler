@@ -2,7 +2,9 @@
 	<h3>Login to Mapler</h3>
 	<p style="color: red;">{{ userError }}</p>
 	<form action="/users/login/" method="post">{% csrf_token %}
-	{{ userForm.as_p }}
-	<input type="submit" value="Submit" />
+		<table>
+			{{ userForm.as_table }}
+		</table>
+		<input type="submit" value="Submit" />
 	</form>
 </p>

@@ -12,8 +12,10 @@
 	{% endif %}
 
 	<form action="/map/submit-point/" method="post">{% csrf_token %}
-		{{ form.as_p }}
-		<input type="submit" value="Save">
+		<table>
+			{{ form.as_table }}
+		</table>
+		<input type="submit" value="Submit">
 	</form>
 
 </div>

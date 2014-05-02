@@ -43,7 +43,7 @@ def getPointInfo(point):
 	pointInfo = {
 	'id': point.id,
 	'owner': point.owner.username,
-	'creationDate': str(point.creation_date),
+	'creationDate': "{:%d.%m.%Y %H:%M:%S}".format(point.creation_date),
 	'latitude': str(point.latitude),
 	'longitude': str(point.longitude),
 	'description': point.description

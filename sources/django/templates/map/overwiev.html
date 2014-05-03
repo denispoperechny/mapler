@@ -4,9 +4,9 @@
 
 <p>Map Overview</p>
 <div id="map_canvas" style="width:800px; height:500px"></div>
-<div id="point-editing-zone"></div>
-
-<div id="previewPointHtmlData" style="display: none;">{{previewPointHtmlData}}</div>
+<div id="point-editing-zone">
+	<div id="previewPointHtmlData" style="display: none;">{{previewPointHtmlData}}</div>
+</div>
 
 <script type="text/javascript"
 	src="http://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false">
@@ -19,7 +19,6 @@
 	var pointEditor = {
 		showInfo: function (pointId) {
 			var point = null;
-			//pointsData.forEach(function(entry) {
 			$.each(pointsData, function( index, entry ) {
 				if (entry.id == pointId)
 					point = entry;
@@ -28,7 +27,7 @@
 			if (point == null)
 				return;
 
-			$( "div#point-editing-zone" ).html($( "div#previewPointHtmlData" ).html());
+			$( "div#previewPointHtmlData" ).show();
 
 			$( "div#point-editing-zone" ).find( "#id_owner" ).html(point.owner);
 			$( "div#point-editing-zone" ).find( "#id_creationDate" ).html(point.creationDate);
@@ -38,7 +37,7 @@
 
 		},
 		clear: function() {
-			$( "div#point-editing-zone" ).html('');
+			$( "div#previewPointHtmlData" ).hide();
 		}
 	}
 

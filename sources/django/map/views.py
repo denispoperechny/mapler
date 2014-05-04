@@ -23,6 +23,7 @@ def overview(request):
 	c = Context({
 		'userName': userName,
 		'previewPointHtmlData' : getPointPreviewHtml(),
+		'viewName': 'Overwiev',
 	})
 	return HttpResponse(t.render(c))
 
@@ -36,6 +37,7 @@ def managePoints(request):
 		'userName': userName,
 		'addingPointHtmlData' : getAddPointForm(request),
 		'editingPointHtmlData': getEditPointForm(request),
+		'viewName': 'Manage Points',
 	})
 	return HttpResponse(t.render(c))
 

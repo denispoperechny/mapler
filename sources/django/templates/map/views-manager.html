@@ -1,17 +1,31 @@
 {% extends "map/master.html" %}
 
 {% block master-child %}
-<div id="views-manager">
-	<div id="views-manager-switchers">
-		<a href="/map/overview/">Overview</a>&nbsp;
-		<a href="/map/manage-points/">Manage Points</a>
-	</div>
 
-	<div id="views-manager-content">
-		{% block views-manager-child %}
-		Default content here...
-		{% endblock views-manager-child %}
+<div id="sidebar-wrapper" class="col-md-1">
+	<div id="sidebar">
+	    <ul class="nav list-group">
+	        <li>
+	            <a class="list-group-item" href="/map/overview/"><i class="icon-home icon-1x"></i>Overview</a>
+	        </li>
+	        <li>
+	            <a class="list-group-item" href="/map/manage-points/"><i class="icon-home icon-1x"></i>Manage Points</a>
+	        </li>
+	    </ul>
 	</div>
-
 </div>
+
+<div id="main-wrapper" class="col-md-11 pull-right">
+    <div id="main">
+		<div class="page-header">
+			<h3>{{viewName}}</h3>
+		</div>
+
+		{% block views-manager-child %}
+			Default content here...
+		{% endblock views-manager-child %}
+
+    </div>
+</div>
+
 {% endblock master-child %}

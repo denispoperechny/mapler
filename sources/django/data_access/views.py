@@ -1,6 +1,5 @@
 from django.http import HttpResponse, HttpResponseRedirect
-from map.models import Point
-from map.models import GroupExtension
+from map.models import Point, GroupJoinRequest, GroupExtension
 from django.contrib.auth.models import User, Group
 import json
 
@@ -65,6 +64,33 @@ def groupMembers(request, groupName):
 	data = modelToJson(users, getUserInfo)
 	return HttpResponse(data, content_type="application/json")
 
+def groupSearch(request, groupName):
+	userName = getUserName(request)
+	if userName == None:
+		return HttpResponseRedirect("/")
+
+	# Do anyone can see this?
+	# Refactor
+	groupsResult = []
+	groups = User.objects.all()
+	for group in groups:
+		if group.name.contains(groupName):
+			groupsResult.append(group)
+
+	data = modelToJson(groupsResult, getGroupInfo)
+	return HttpResponse(data, content_type="application/json")
+
+def groupRequests(request, groupName):
+	userName = getUserName(request)
+	if userName == None:
+		return HttpResponseRedirect("/")
+
+	# Do anyone can see this?
+	group = Group.objects.get(name=groupName)
+	requests = GroupJoinRequest.objects.filter(group=group)
+	data = modelToJson(requests, getRequestInfo)
+	return HttpResponse(data, content_type="application/json")
+
 def modelToJson(modelSet, formatter):
 	resultSet = []
 	for model in modelSet:
@@ -72,6 +98,15 @@ def modelToJson(modelSet, formatter):
 
 	return json.dumps(resultSet)
 
+def getRequestInfo(request):
+	requestInfo = {
+	'group': request.group.name,
+	'initiator': request.initiator.username,
+	'comment': request.comment,
+	'creationDate': formatDate(request.creation_date),
+	}
+
+	return requestInfo
 
 def getGroupInfo(group):
 	groupExt = GroupExtension.objects.get(group=group)

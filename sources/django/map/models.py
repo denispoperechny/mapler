@@ -10,7 +10,8 @@ class Point(models.Model):
     longitude = models.DecimalField(max_digits=12, decimal_places=8)
 
 class GroupExtension(models.Model):
-	owner = models.OneToOneField(User)
+	group = models.OneToOneField(Group)
+	owner = models.ForeignKey(User)
 	description = models.CharField(max_length=200)
 	creation_date = models.DateTimeField(auto_now_add=True)
 

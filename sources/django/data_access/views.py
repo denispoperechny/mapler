@@ -1,6 +1,7 @@
 from django.http import HttpResponse, HttpResponseRedirect
 from map.models import Point
-from django.contrib.auth.models import User
+from map.models import GroupExtension
+from django.contrib.auth.models import User, Group
 import json
 
 def point(request, pointId):
@@ -17,13 +18,8 @@ def pointsByUser(request, userLogin):
 	if userName == None:
 		return HttpResponseRedirect("/")
 
-	userId = User.objects.get(username=userLogin)
-	points = Point.objects.filter(owner=userId)
-	resultSet = []
-	for point in points:
-		resultSet.append(getPointInfo(point))
-
-	data = json.dumps(resultSet)
+	user = User.objects.get(username=userLogin)
+	data = modelToJson(Point.objects.filter(owner=user), getPointInfo)
 	return HttpResponse(data, content_type="application/json")
 
 def points(request):
@@ -31,25 +27,88 @@ def points(request):
 	if userName == None:
 		return HttpResponseRedirect("/")
 
-	points = Point.objects.all()
-	resultSet = []
-	for point in points:
-		resultSet.append(getPointInfo(point))
-
-	data = json.dumps(resultSet)
+	data = modelToJson(Point.objects.all(), getPointInfo)
 	return HttpResponse(data, content_type="application/json")
+
+def groupsOwnedByUser(request, userLogin):
+	userName = getUserName(request)
+	if userName == None:
+		return HttpResponseRedirect("/")
+
+	# Do anyone can see this?
+	groups = []
+	user = User.objects.get(username=userLogin)
+	groupExts = GroupExtension.objects.filter(owner=user)
+	for grExt in groupExts:
+		groups.append(grExt.group)
+
+	data = modelToJson(groups, getGroupInfo)
+	return HttpResponse(data, content_type="application/json")
+
+def groupsByUser(request, userLogin):
+	userName = getUserName(request)
+	if userName == None:
+		return HttpResponseRedirect("/")
+
+	# Do anyone can see this?
+	groups = User.objects.get(username=userLogin).groups.all()
+	data = modelToJson(groups, getGroupInfo)
+	return HttpResponse(data, content_type="application/json")
+
+def groupMembers(request, groupName):
+	userName = getUserName(request)
+	if userName == None:
+		return HttpResponseRedirect("/")
+
+	# Do anyone can see this?
+	users = Group.objects.get(name=groupName).user_set.all()
+	data = modelToJson(users, getUserInfo)
+	return HttpResponse(data, content_type="application/json")
+
+def modelToJson(modelSet, formatter):
+	resultSet = []
+	for model in modelSet:
+		resultSet.append(formatter(model))
+
+	return json.dumps(resultSet)
+
+
+def getGroupInfo(group):
+	groupExt = GroupExtension.objects.get(group=group)
+
+	groupInfo = {
+	'name': group.name,
+	'owner': groupExt.owner.username,
+	'description': groupExt.description,
+	'creationDate': formatDate(groupExt.creation_date),
+	'userCount': len(group.user_set.all()),
+	}
+
+	return groupInfo
+
+def getUserInfo(user):
+	userInfo = {
+	# 'id': point.id,
+	'login': user.username,
+	}
+
+	return userInfo
 
 def getPointInfo(point):
 	pointInfo = {
 	'id': point.id,
 	'owner': point.owner.username,
-	'creationDate': "{:%d.%m.%Y %H:%M:%S}".format(point.creation_date),
+	'group': point.owningGroup.name,
+	'creationDate': formatDate(point.creation_date),
 	'latitude': str(point.latitude),
 	'longitude': str(point.longitude),
 	'description': point.description
 	}
 
 	return pointInfo
+
+def formatDate(date):
+	return "{:%d.%m.%Y %H:%M:%S}".format(date)
 
 def getUserName(request):
 	userName = None

@@ -6,7 +6,7 @@ from forms.AddPointForm import AddPointForm
 from models import Point
 from django.template import RequestContext
 from django.template.loader import render_to_string
-from django.core import serializers
+from django.contrib.auth.models import Group
 
 def getUserName(request):
 	userName = None
@@ -87,14 +87,12 @@ def updatePointAccordingToForm(form, point):
 	point.description = form.cleaned_data['description']
 	point.latitude = form.cleaned_data['latitude']
 	point.longitude = form.cleaned_data['longitude']
-
+	# temporary fix
+	point.owningGroup = Group.objects.all()[0]
 
 def getAddPointForm(request):
 	addForm = AddPointForm(initial={'maplerId': -1})
-	# editForm = LoginUserForm()
-	#t = loader.get_template('map/point-edit.html')
 	c = Context({ 
-		# 'object_list': SomeModel.objects.all(),
 		'mode': 'add',
 		'form': addForm,
 		})

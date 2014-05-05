@@ -19,3 +19,4 @@ class GroupJoinRequest(models.Model):
     group = models.ForeignKey(Group)
     creation_date = models.DateTimeField(auto_now_add=True)
     comment = models.CharField(max_length=200)
+    active = models.BooleanField()

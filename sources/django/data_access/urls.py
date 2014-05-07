@@ -11,6 +11,5 @@ urlpatterns = patterns('',
     (r'^groups-by-user/(\S+)/$', 'data_access.views.groupsByUser'),
     (r'^group-members/(\S+)/$', 'data_access.views.groupMembers'),
     (r'^group-requests/(\S+)/$', 'data_access.views.groupRequests'),
-    #
     (r'^group-search/(\S+)/$', 'data_access.views.groupSearch'),
 )

@@ -72,10 +72,13 @@ def groupSearch(request, groupName):
 	# Do anyone can see this?
 	# Refactor
 	groupsResult = []
-	groups = User.objects.all()
-	for group in groups:
-		if group.name.contains(groupName):
-			groupsResult.append(group)
+	groups = Group.objects.all()
+	if groupName == "_all":
+		groupsResult = groups
+	else:
+		for group in groups:
+			if groupName.lower() in group.name.lower():
+				groupsResult.append(group)
 
 	data = modelToJson(groupsResult, getGroupInfo)
 	return HttpResponse(data, content_type="application/json")

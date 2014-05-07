@@ -1,7 +1,4 @@
 
-$.ajaxSetup({
-	cache: false
-});
 
 function buildPoints(map, onPointClick) {
 	$.each(pointsData, function( index, entry ) {

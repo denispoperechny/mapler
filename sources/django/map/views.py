@@ -72,6 +72,20 @@ def deletePoint(request, pointId):
 
 	return HttpResponseRedirect("/map/manage-points/")
 
+def manageGroups(request):
+	userName = getUserName(request)
+	if userName == None:
+		return HttpResponseRedirect("/")
+	
+	t = loader.get_template('map/manage-groups.html')
+	c = Context({
+		'userName': userName,
+		# 'addingPointHtmlData' : getAddPointForm(request),
+		# 'editingPointHtmlData': getEditPointForm(request),
+		'viewName': 'Manage Groups',
+	})
+	return HttpResponse(t.render(c))
+
 def index(request):
 	userName = getUserName(request)
 	if userName != None:

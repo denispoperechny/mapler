@@ -36,13 +36,33 @@
 			$( "div#point-editing-zone" ).find( "#id_description" ).val(point.description);
 			$( "div#point-editing-zone" ).find( "a#delete-point-button" ).attr('href', '/map/delete-point/' + point.id +'/');
 
+			$( "div#point-editing-zone" ).find( "#id_group" ).html('<option selected value="'+point.group+'">'+point.group+'</option>');
 		},
 		showAddingForm: function (latitude, longitude) {
 			$( "div#editingPointHtmlData" ).hide();
 			$( "div#addingPointHtmlData" ).show();
 
-			$( "div#point-editing-zone" ).find( "input#id_latitude" ).val(latitude);
-			$( "div#point-editing-zone" ).find( "input#id_longitude" ).val(longitude);
+			$.getJSON( "/data/groups-by-user/{{userName}}/", function( data ) {
+				if (data.length==0) {
+					$( "div#addingPointHtmlData" ).html("<h3>Please join or create a group first.</h3>");
+				} else {
+					$( "div#point-editing-zone" ).find( "input#id_latitude" ).val(latitude);
+					$( "div#point-editing-zone" ).find( "input#id_longitude" ).val(longitude);
+
+					$( "div#addingPointHtmlData" ).find( "#id_group" ).html("");
+					$.each(data, function(index, value){
+						var option = '';
+						if (index == 0){
+							option = '<option selected value="'+value.name+'">'+value.name+'</option>';
+						} else {
+							option = '<option value="'+value.name+'">'+value.name+'</option>';
+						}
+
+						$( "div#addingPointHtmlData" ).find( "#id_group" ).append(option);
+					});
+
+				}
+			});
 		}
 	}
 

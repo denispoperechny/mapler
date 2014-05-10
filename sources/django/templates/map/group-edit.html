@@ -1,0 +1,47 @@
+<div class="groupForm">
+	<b><p id="groupFormMessage"></p></b>
+	<form id="createGroupForm" action="/map/submit-create-group-form/">{% csrf_token %}
+		<table>
+			{{ form.as_table }}
+		</table>
+		<input type="submit" value="Create" />
+	</form>
+
+	<script type="text/javascript">
+
+	var createGroupForm = {
+		_createdCB: null,
+
+		groupCreatedCallback: function(callback){
+			_createdCB = callback;
+		},
+
+		_onGroupCreated: function(){
+			_createdCB();
+		}
+	}
+
+	$("#createGroupForm").submit(function( event ) {
+		event.preventDefault();
+
+		var url = $("#createGroupForm").attr('action');
+
+	    $.ajax({
+	           type: "POST",
+	           url: url,
+	           data: $("#createGroupForm").serialize(), // serializes the form's elements.
+	           success: function(data)
+	           {
+	           		if (data.success) {
+				    	$('#groupFormMessage').html("Successfully created");
+				    	createGroupForm._onGroupCreated();
+					} else {
+						$("#createGroupForm").find('#id_name').val('');
+					    $('#groupFormMessage').html(data.errorMessage);
+					}
+	           }
+	    });
+	});
+	</script>
+
+</div>

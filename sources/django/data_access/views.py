@@ -26,7 +26,16 @@ def points(request):
 	if userName == None:
 		return HttpResponseRedirect("/")
 
-	data = modelToJson(Point.objects.all(), getPointInfo)
+	userGroups = []
+	for group in request.user.groups.all():
+		userGroups.append(group.name)
+
+	pointsToDisplay = []
+	for point in Point.objects.all():
+		if point.owningGroup.name in userGroups:
+			pointsToDisplay.append(point)
+
+	data = modelToJson(pointsToDisplay, getPointInfo)
 	return HttpResponse(data, content_type="application/json")
 
 def groupsOwnedByUser(request, userLogin):
@@ -34,7 +43,7 @@ def groupsOwnedByUser(request, userLogin):
 	if userName == None:
 		return HttpResponseRedirect("/")
 
-	# Do anyone can see this?
+	# Do allow everybody see this?
 	groups = []
 	user = User.objects.get(username=userLogin)
 	groupExts = GroupExtension.objects.filter(owner=user)
@@ -49,7 +58,7 @@ def groupsByUser(request, userLogin):
 	if userName == None:
 		return HttpResponseRedirect("/")
 
-	# Do anyone can see this?
+	# Do allow everybody see this?
 	groups = User.objects.get(username=userLogin).groups.all()
 	data = modelToJson(groups, getGroupInfo)
 	return HttpResponse(data, content_type="application/json")
@@ -59,7 +68,7 @@ def groupMembers(request, groupName):
 	if userName == None:
 		return HttpResponseRedirect("/")
 
-	# Do anyone can see this?
+	# Do allow everybody see this?
 	users = Group.objects.get(name=groupName).user_set.all()
 	data = modelToJson(users, getUserInfo)
 	return HttpResponse(data, content_type="application/json")
@@ -69,7 +78,7 @@ def groupSearch(request, groupName):
 	if userName == None:
 		return HttpResponseRedirect("/")
 
-	# Do anyone can see this?
+	# Do allow everybody see this?
 	# Refactor
 	groupsResult = []
 	groups = Group.objects.all()
@@ -88,7 +97,7 @@ def groupRequests(request, groupName):
 	if userName == None:
 		return HttpResponseRedirect("/")
 
-	# Do anyone can see this?
+	# Do allow everybody see this?
 	group = Group.objects.get(name=groupName)
 	requests = GroupJoinRequest.objects.filter(group=group)
 	data = modelToJson(requests, getRequestInfo)

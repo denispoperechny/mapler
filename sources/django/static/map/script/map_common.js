@@ -7,12 +7,13 @@ function buildPoints(map, onPointClick) {
 		var lat = entry.latitude;
 		var title = entry.description;
 		var owner = entry.owner;
+		var group = entry.group;
 		var creationDate = entry.creationDate;
 
 		var marker = new google.maps.Marker({
 			position: new google.maps.LatLng(lat, lng),
 			map: map,
-			title: owner + '\n' + creationDate + '\n' + title
+			title: owner + ' @ ' + group + '\n' + creationDate + '\n' + title
 		});
 		marker.mapler_id = id;
 

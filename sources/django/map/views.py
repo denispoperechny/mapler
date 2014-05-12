@@ -176,6 +176,7 @@ def createGroupFormSubmit(request):
 	# valid = form.is_valid()
 	# groupName = form.cleaned_data['name']
 	groupName = request.POST['name']
+	groupName = groupName.replace(' ','_')
 	description = request.POST['description']
 
 	if groupName == '':

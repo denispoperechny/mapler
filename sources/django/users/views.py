@@ -60,6 +60,7 @@ def index(request):
     return HttpResponseRedirect("/")
 
 def tryLogin(login, passwd, request):
+    login = login.replace(' ', '_')
     errorMessage = ''
     user = authenticate(username=login, password=passwd)
     if user is not None:
@@ -70,6 +71,7 @@ def tryLogin(login, passwd, request):
     return errorMessage
 
 def tryCreate(login, passwd, mail=''):
+    login = login.replace(' ', '_')
     errorMessage = ''
     
     # Check if user already exists

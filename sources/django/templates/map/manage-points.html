@@ -7,13 +7,15 @@
 	<div id="editingPointHtmlData" style="display: none;">{{editingPointHtmlData}}</div>
 	<div id="addingPointHtmlData" style="display: none;">{{addingPointHtmlData}}</div>
 </div>
+<div id="point-attachments-zone">
+	<div id="pointAttachmentsHtmlData" style="display: none;">{{pointAttachmentsHtmlData}}</div>
+</div>
 
 <script type="text/javascript"
 	src="http://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false">
 </script>
 
 <script type="text/javascript">
-	// To be filled on server side
 	var pointsData = [] ;
 
 	var pointEditor = {
@@ -29,6 +31,7 @@
 
 			$( "div#addingPointHtmlData" ).hide();
 			$( "div#editingPointHtmlData" ).show();
+			$( "div#pointAttachmentsHtmlData" ).show();
 
 			$( "div#point-editing-zone" ).find( "#id_maplerId" ).val(pointId);
 			$( "div#point-editing-zone" ).find( "#id_latitude" ).val(point.latitude);
@@ -37,10 +40,13 @@
 			$( "div#point-editing-zone" ).find( "a#delete-point-button" ).attr('href', '/map/delete-point/' + point.id +'/');
 
 			$( "div#point-editing-zone" ).find( "#id_group" ).html('<option selected value="'+point.group+'">'+point.group+'</option>');
+
+			pointAttacmentsManager.initialize(pointId, true, '/map/manage-points/');
 		},
 		showAddingForm: function (latitude, longitude) {
 			$( "div#editingPointHtmlData" ).hide();
 			$( "div#addingPointHtmlData" ).show();
+			$( "div#pointAttachmentsHtmlData" ).hide();
 
 			$.getJSON( "/data/groups-by-user/{{userName}}/", function( data ) {
 				if (data.length==0) {

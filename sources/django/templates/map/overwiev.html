@@ -6,6 +6,9 @@
 <div id="point-editing-zone">
 	<div id="previewPointHtmlData" style="display: none;">{{previewPointHtmlData}}</div>
 </div>
+<div id="point-attachments-zone">
+	<div id="pointAttachmentsHtmlData" style="display: none;">{{pointAttachmentsHtmlData}}</div>
+</div>
 
 <script type="text/javascript"
 	src="http://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false">
@@ -27,6 +30,7 @@
 				return;
 
 			$( "div#previewPointHtmlData" ).show();
+			$( "div#pointAttachmentsHtmlData" ).show();
 
 			$( "div#point-editing-zone" ).find( "#id_owner" ).html(point.owner);
 			$( "div#point-editing-zone" ).find( "#id_owningGroup" ).html(point.group);
@@ -35,9 +39,11 @@
 			$( "div#point-editing-zone" ).find( "#id_longitude" ).html(point.longitude);
 			$( "div#point-editing-zone" ).find( "#id_description" ).html(point.description);
 
+			pointAttacmentsManager.initialize(pointId, true, '/map/overview/');
 		},
 		clear: function() {
 			$( "div#previewPointHtmlData" ).hide();
+			$( "div#pointAttachmentsHtmlData" ).hide();
 		}
 	}
 

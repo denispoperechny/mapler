@@ -25,6 +25,7 @@ def overview(request):
 	c = Context({
 		'userName': userName,
 		'previewPointHtmlData' : getPointPreviewHtml(),
+		'pointAttachmentsHtmlData': getPointAttachmentsHtml(request),
 		'viewName': 'Overwiev',
 	})
 	return HttpResponse(t.render(c))
@@ -39,29 +40,11 @@ def managePoints(request):
 		'userName': userName,
 		'addingPointHtmlData' : getAddPointForm(request),
 		'editingPointHtmlData': getEditPointForm(request),
+		'pointAttachmentsHtmlData': getPointAttachmentsHtml(request),
 		'viewName': 'Manage Points',
 	})
 	return HttpResponse(t.render(c))
 
-# def submitPoint(request):
-# 	userName = getUserName(request)
-# 	if userName == None:
-# 		return HttpResponseRedirect("/")
-
-# 	form = AddPointForm(request.POST)
-# 	if form.is_valid():
-# 		maplerId = form.cleaned_data['maplerId']
-# 		if maplerId == -1: # new point
-# 			newPoint = Point(owner=request.user)
-# 			updatePointAccordingToForm(form, newPoint)
-# 			newPoint.save()
-# 		else:
-# 			point = Point.objects.get(pk=maplerId)
-# 			if point.owner.username == userName:
-# 				updatePointAccordingToForm(form, point)
-# 				point.save()	
-
-# 	return HttpResponseRedirect("/map/manage-points/")
 def submitPoint(request):
 	userName = getUserName(request)
 	if userName == None:
@@ -115,12 +98,6 @@ def index(request):
 	})
 	return HttpResponse(t.render(c))
 
-# def updatePointAccordingToForm(form, point):
-# 	point.description = form.cleaned_data['description']
-# 	point.latitude = form.cleaned_data['latitude']
-# 	point.longitude = form.cleaned_data['longitude']
-# 	# temporary fix
-# 	point.owningGroup = Group.objects.all()[0]
 def updatePointAccordingToForm(form, point):
 	group = Group.objects.get(name=form['group'])
 
@@ -162,6 +139,11 @@ def getAddGroupForm(request):
 		'form': addForm,
 		})
 	rendered = render_to_string('map/group-edit.html', c, context_instance=RequestContext(request))
+	return rendered
+
+def getPointAttachmentsHtml(request):
+	c = Context({ })
+	rendered = render_to_string('map/pointAttachments.html', c, context_instance=RequestContext(request))
 	return rendered
 
 def createGroupFormSubmit(request):

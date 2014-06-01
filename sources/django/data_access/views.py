@@ -1,5 +1,5 @@
 from django.http import HttpResponse, HttpResponseRedirect
-from map.models import Point, GroupJoinRequest, GroupExtension
+from map.models import Point, GroupJoinRequest, GroupExtension, Attachment
 from django.contrib.auth.models import User, Group
 import json
 
@@ -103,6 +103,16 @@ def groupRequests(request, groupName):
 	data = modelToJson(requests, getRequestInfo)
 	return HttpResponse(data, content_type="application/json")
 
+def getPointAttachments(request, pointId):
+	userName = getUserName(request)
+	if userName == None:
+		return HttpResponseRedirect("/")
+
+	# Do allow everybody see this?
+	point = Point.objects.get(pk=int(pointId))
+	data = modelToJson(point.attachment_set.all(), getAttachmentInfo)
+	return HttpResponse(data, content_type="application/json")
+
 def modelToJson(modelSet, formatter):
 	resultSet = []
 	for model in modelSet:
@@ -153,6 +163,18 @@ def getPointInfo(point):
 	}
 
 	return pointInfo
+
+def getAttachmentInfo(attachment):
+	attchInfo = {
+	'id': attachment.id,
+	'owner': attachment.owner.username,
+	'point': attachment.point.id,
+	'creationDate': formatDate(attachment.creation_date),
+	'fileName': attachment.fileName,
+	'directory': attachment.directory,
+	}
+
+	return attchInfo
 
 def formatDate(date):
 	return "{:%d.%m.%Y %H:%M:%S}".format(date)

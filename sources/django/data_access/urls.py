@@ -6,6 +6,7 @@ urlpatterns = patterns('',
     (r'^point/(\d+)/$', 'data_access.views.point'),
     (r'^points/$', 'data_access.views.points'),
     (r'^points-by-user/(\S+)/$', 'data_access.views.pointsByUser'),
+    (r'^point-attachments/(\d+)/$', 'data_access.views.getPointAttachments'),
     # groups
     (r'^groups-owned-by-user/(\S+)/$', 'data_access.views.groupsOwnedByUser'),
     (r'^groups-by-user/(\S+)/$', 'data_access.views.groupsByUser'),

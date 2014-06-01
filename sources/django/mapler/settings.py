@@ -52,7 +52,7 @@ USE_TZ = True
 
 # Absolute filesystem path to the directory that will hold user-uploaded files.
 # Example: "/home/media/media.lawrence.com/media/"
-MEDIA_ROOT = ''
+MEDIA_ROOT = PROJECT_PATH + '/../static/media/'
 
 # URL that handles the media served from MEDIA_ROOT. Make sure to use a
 # trailing slash.
@@ -132,6 +132,7 @@ INSTALLED_APPS = (
     'map',
     'users',
     'data_access',
+    'file_manager',
 )
 
 # A sample logging configuration. The only tangible logging

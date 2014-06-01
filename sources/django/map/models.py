@@ -21,3 +21,11 @@ class GroupJoinRequest(models.Model):
     creation_date = models.DateTimeField(auto_now_add=True)
     comment = models.CharField(max_length=200)
     active = models.BooleanField()
+
+class Attachment(models.Model):
+    owner = models.ForeignKey(User)
+    point = models.ForeignKey(Point)
+    creation_date = models.DateTimeField(auto_now_add=True)
+    fileName = models.CharField(max_length=256)
+    directory = models.CharField(max_length=256)
+

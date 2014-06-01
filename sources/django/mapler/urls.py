@@ -18,6 +18,7 @@ urlpatterns = patterns('',
     url(r'^map/', include('map.urls')),
     url(r'^users/', include('users.urls')),
     url(r'^data/', include('data_access.urls')),
+    url(r'^file/', include('file_manager.urls')),
 
     # Default app
     url(r'^$', include('map.urls'))

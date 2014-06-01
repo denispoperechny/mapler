@@ -1,16 +1,17 @@
 
 <h3>Attachments</h3>
+<p style="display: none; color: red;" id="attachment-upload-indicator">Uploading...</p>
 
 <table id="point_attachments_templates" style="display: none;">
 	<tbody>
 		<tr id="editable_template">
-			<td><a href='%file_link%'>%file_name%</a></td>
+			<td><a href='%file_link%' target="_blank">%file_name%</a></td>
 			<td>%owner%</td>
 			<td>%upload_date%</td>
 			<td><a href='%delete_link%' ident="delLink">Delete</a></td>
 		</tr>
 		<tr id="readonly_template">
-			<td><a href='%file_link%'>%file_name%</a></td>
+			<td><a href='%file_link%' target="_blank">%file_name%</a></td>
 			<td>%owner%</td>
 			<td>%upload_date%</td>
 		</tr>
@@ -22,9 +23,12 @@
 	</tbody>
 </table>
 
-<form id="pointAttachementsForm" action="/file/upload/" enctype="multipart/form-data" method="post">{% csrf_token %}
+<iframe id="uploadTrg" name="uploadTrg" height="0" width="0" frameborder="0" scrolling="yes"></iframe>
+
+<form id="pointAttachementsForm" action="/file/upload/" enctype="multipart/form-data" method="post"target="uploadTrg" >{% csrf_token %}
 	<input type="hidden" name="pointId" value="-1">
 	<input type="hidden" name="redirectTarget" value="">
+	<input type="hidden" name="uploadIdentifier" value="">
 	<input type="file" name="attachment" id="attachment" />
 	<input type="submit" value="Upload" />
 </form>
@@ -47,8 +51,10 @@ var pointAttacmentsManager = {
 			$("#pointAttachementsForm").hide();
 		}
 
+		$("#pointAttachementsForm").find("input[name='attachment']").val('');
 		$("#pointAttachementsForm").find("input[name='pointId']").val(pointAttacmentsManager._pointId);
 		$("#pointAttachementsForm").find("input[name='redirectTarget']").val(pointAttacmentsManager._redirectTarget);
+		$("#pointAttachementsForm").find("input[name='uploadIdentifier']").val(Math.random());
 		pointAttacmentsManager._loadData(pointAttacmentsManager._buildGuiItems);
 	},
 
@@ -98,19 +104,24 @@ var pointAttacmentsManager = {
 		event.preventDefault();
 	},
 
-	// onSubmit: function() {
-	// 	var submitUrl = $("#pointAttachementsForm").attr("action");
-		
-	// 	$("#pointAttachementsForm").ajaxSubmit({
-	// 		url: submitUrl, 
-	// 		type: 'post',
-	// 		success: function(responseData, status){
-	// 			pointAttacmentsManager.initialize(pointAttacmentsManager._pointId, pointAttacmentsManager._isEditable);
-	// 		}
-	// 	});
+	onSubmit: function() {
+		$("#attachment-upload-indicator").show();
+		setTimeout(pointAttacmentsManager._updateUploadStatus, 1000);
 
-	// 	//pointAttacmentsManager.initialize(pointAttacmentsManager._pointId, pointAttacmentsManager._isEditable);
-	// },
+	},
+
+	_updateUploadStatus: function() {
+		var ident = $("#pointAttachementsForm").find("input[name='uploadIdentifier']").val();
+		$.get( "/file/checkUploaded/"+ident+"/", function( data ) {
+			if (data == 'true') {
+				$("#attachment-upload-indicator").hide();
+				pointAttacmentsManager._reinitialize();
+			} else {
+				//sleep
+				setTimeout(pointAttacmentsManager._updateUploadStatus, 1000);
+			}
+		});
+	},
 
 	_fillAttachmentData: function(template, attchData) {
 		return template
@@ -122,9 +133,9 @@ var pointAttacmentsManager = {
 	}
 }
 
-// $( "#pointAttachementsForm" ).submit(function( event ) {
-//   pointAttacmentsManager.onSubmit();
-//   event.preventDefault();
-// });
+$( "#pointAttachementsForm" ).submit(function( event ) {
+	pointAttacmentsManager.onSubmit();
+	// event.preventDefault();
+});
 
 </script>

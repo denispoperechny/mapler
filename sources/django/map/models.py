@@ -29,3 +29,9 @@ class Attachment(models.Model):
     fileName = models.CharField(max_length=256)
     directory = models.CharField(max_length=256)
 
+class FileUploadSession(models.Model):
+    attachment = models.ForeignKey(Attachment)
+    uploadIdentifier = models.CharField(max_length=256)
+    uploadFinished = models.BooleanField(default=False)
+    uploadedPercentage = models.IntegerField(default=0)
+

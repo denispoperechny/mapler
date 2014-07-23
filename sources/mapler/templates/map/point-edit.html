@@ -1,0 +1,21 @@
+<div class="point">
+	<h3>
+		{% if mode == "edit" %}
+			Edit Point
+		{% else %}
+			Add New Point
+		{% endif %}
+	</h3>
+
+	{% if mode == "edit" %}
+		<a id="delete-point-button" href="/map/delete-point/%point-id%">Delete Point</a><br />
+	{% endif %}
+
+	<form action="/map/submit-point/" method="post">{% csrf_token %}
+		<table>
+			{{ form.as_table }}
+		</table>
+		<input type="submit" value="Submit">
+	</form>
+
+</div>

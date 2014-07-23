@@ -1,0 +1,134 @@
+{% extends "map/views-manager.html" %}
+
+{% block views-manager-child %}
+
+<h3>Join Group</h3>
+<form id="groupSearchForm" action="#">
+	<input type="text" name="groupName" />
+	<input type="submit" value="Search" />
+</form>
+<br />
+
+<table class="table table-striped table-bordered table-condensed">
+	<tbody id="groupSearchResults">
+
+	</tbody>
+</table>
+
+
+<hr />
+<h3>Joined Groups</h3>
+
+<table class="table table-striped table-bordered table-condensed">	
+	<thead>
+		<tr>
+			<td>Name</td>
+			<td>Description</td>
+			<td>Cretion Date</td>
+			<td>Users Count</td>
+			<td>Action</td>
+		</tr>
+	</thead>
+	<tbody id="groupsView">
+
+	</tbody>
+</table>
+
+<hr />
+<h3>Create Group</h3>
+
+<div id="addGroupFormContainer">
+	{{createGroupFormData}}
+</div>
+
+<hr />
+<h3>Owned Groups</h3>
+<table class="table table-striped table-bordered table-condensed">
+	<thead>
+		<tr>
+			<td>Name</td>
+			<td>Description</td>
+			<td>Cretion Date</td>
+			<td>Users Count</td>
+			<td>Action</td>
+		</tr>
+	</thead>
+	<tbody id="ownedGroups">
+
+	</tbody>
+</table>
+
+<table style="display: none;">
+	<tbody id="groupTableItemTemplate">
+		<tr>
+			<td>_groupName_</td>
+			<td>_description_</td>
+			<td>_cretionDate_</td>
+			<td>_usersCount_</td>
+			<td><a href="_action_">_actionName_</a></td>
+		</tr>
+	</tbody>
+</table>
+
+<script type="text/javascript">
+var userName="{{userName}}";
+
+function getTemplatedGroups(groupData, action, actionName)
+{
+	var compiledData = "";
+	$.each( groupData, function( key, val ) {
+		var template = $("#groupTableItemTemplate").html();
+		var actAction = action.replace("_groupName_", val['name'])
+		newHtml = template
+			.replace(/_groupName_/g, val['name'])
+			.replace("_cretionDate_", val['creationDate'])
+			.replace("_description_", val['description'])
+			//.replace("_userName_", userName)
+			.replace("_action_", actAction)
+			.replace("_actionName_", actionName)
+			.replace("_usersCount_", val['userCount']);
+		compiledData+=newHtml;
+	});
+	return compiledData;
+}
+
+$("#groupSearchForm").submit(function( event ) {
+	event.preventDefault();
+
+	var groupName = $("#groupSearchForm").find("input[name='groupName']").val();
+	if (groupName=="")
+	{
+		groupName = "_all";
+	}
+
+	$.getJSON( "/data/group-search/"+groupName+"/", function( data ) {
+		$("#groupSearchResults").html(getTemplatedGroups(data, "/map/add-user-to-group/"+userName+"/_groupName_/", "Join"));
+	});
+
+});
+
+function loadUsersGroups(userName) {
+	$.getJSON( "/data/groups-by-user/"+userName+"/", function( data ) {
+		$("#groupsView").html(getTemplatedGroups(data, "/map/remove-user-from-group/"+userName+"/_groupName_/", "Leave"));
+	});
+}
+
+function loadOwnedGroups(userName) {
+	$.getJSON( "/data/groups-owned-by-user/"+userName+"/", function( data ) {
+		$("#ownedGroups").html(getTemplatedGroups(data, "/map/delete-group/_groupName_/", "Delete"));
+	});
+}
+
+$( document ).ready(function() {
+	loadUsersGroups(userName);
+	loadOwnedGroups(userName);
+});
+
+createGroupForm.groupCreatedCallback(function(){
+	loadUsersGroups(userName);
+	loadOwnedGroups(userName);
+});
+
+</script>
+
+{% endblock views-manager-child %}

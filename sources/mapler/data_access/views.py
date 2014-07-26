@@ -1,6 +1,7 @@
 from django.http import HttpResponse, HttpResponseRedirect
 from map.models import Point, GroupJoinRequest, GroupExtension, Attachment
 from django.contrib.auth.models import User, Group
+from django.conf import settings
 import json
 
 def point(request, pointId):
@@ -172,6 +173,7 @@ def getAttachmentInfo(attachment):
 	'creationDate': formatDate(attachment.creation_date),
 	'fileName': attachment.fileName,
 	'directory': attachment.directory,
+	'baseUrl': settings.MEDIA_URL,
 	}
 
 	return attchInfo

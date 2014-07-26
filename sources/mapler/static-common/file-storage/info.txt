@@ -1,0 +1,2 @@
+Directory for storing files on Dev environment.
+Please find MEDIA_ROOT and MEDIA_URL variables at mapler/settings.py to configure the storage.

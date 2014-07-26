@@ -128,7 +128,7 @@ var pointAttacmentsManager = {
 		.replace('%file_name%', attchData.fileName)
 		.replace('%upload_date%', attchData.creationDate)
 		.replace('%owner%', attchData.owner)
-		.replace('%file_link%', '/static/media/' + attchData.id + '_' + attchData.fileName)
+		.replace('%file_link%', attchData.baseUrl + attchData.id + '_' + attchData.fileName)
 		.replace('%delete_link%', '/file/delete/' + attchData.id + '/');
 	}
 }

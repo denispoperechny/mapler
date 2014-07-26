@@ -108,3 +108,6 @@ DATABASES = {
         'PORT': '',                      # Set to empty string for default. Not used with sqlite3.
     }
 }
+
+MEDIA_ROOT = os.path.join(BASE_DIR, "static-common/file-storage/")
+MEDIA_URL = "/static/file-storage/"

@@ -6,7 +6,7 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.template import Context, loader
 from forms.AddPointForm import AddPointForm
 from forms.AddGroupForm import AddGroupForm
-from models import Point, GroupExtension
+from models import Point, GroupExtension, UserLog
 from django.template import RequestContext
 from django.template.loader import render_to_string
 from django.contrib.auth.models import User, Group
@@ -52,16 +52,26 @@ def submitPoint(request):
 	if userName == None:
 		return HttpResponseRedirect("/")
 
+	pointDesc = ""
+
 	maplerId = int(request.POST['maplerId'])
 	if maplerId == -1: # new point
 		newPoint = Point(owner=request.user)
 		updatePointAccordingToForm(request.POST, newPoint)
+		pointDesc = newPoint.description
 		newPoint.save()
 	else:
 		point = Point.objects.get(pk=maplerId)
 		if point.owner.username == userName:
 			updatePointAccordingToForm(request.POST, point)
+			pointDesc = point.description
 			point.save()
+
+	logRecord = UserLog()
+	logRecord.ip = str(get_client_ip(request))
+	logRecord.user = request.user
+	logRecord.comment="Pt submit: " + pointDesc
+	logRecord.save()
 
 	return HttpResponseRedirect("/map/manage-points/")
 
@@ -222,4 +232,10 @@ def removeUserFromGroup(request, userName, groupName):
 
 	return HttpResponseRedirect("/map/manage-groups/")
 
-
+def get_client_ip(request):
+	x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
+	if x_forwarded_for:
+		ip = x_forwarded_for.split(',')[0]
+	else:
+		ip = request.META.get('REMOTE_ADDR')
+	return ip

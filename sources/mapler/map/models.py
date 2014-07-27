@@ -37,3 +37,9 @@ class FileUploadSession(models.Model):
     uploadIdentifier = models.CharField(max_length=256)
     uploadFinished = models.BooleanField(default=False)
     uploadedPercentage = models.IntegerField(default=0)
+
+class UserLog(models.Model):
+    user = models.ForeignKey(User)
+    time_stamp = models.DateTimeField(auto_now_add=True)
+    ip = models.CharField(max_length=256)
+    comment = models.CharField(max_length=128)

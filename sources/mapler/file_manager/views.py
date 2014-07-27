@@ -1,4 +1,4 @@
-from map.models import Point, Attachment, FileUploadSession
+from map.models import Point, Attachment, FileUploadSession, UserLog
 from django.http import HttpResponse, HttpResponseRedirect
 from django.conf import settings
 import os
@@ -9,6 +9,10 @@ def test(request):
 	return HttpResponse("Tested")
 
 def upload(request):
+	userName = getUserName(request)
+	if userName == None:
+		return HttpResponseRedirect("/")
+
 	f = request.FILES.get('attachment')
 	pointId = request.POST['pointId']
 	point = Point.objects.get(pk=int(pointId))
@@ -36,6 +40,12 @@ def upload(request):
 	newUplSession.uploadFinished = True
 	newUplSession.uploadedPercentage = 100
 	newUplSession.save()
+
+	logRecord = UserLog()
+	logRecord.ip = str(get_client_ip(request))
+	logRecord.user = request.user
+	logRecord.comment="File uploaded: " + f.name
+	logRecord.save()
 
 	return HttpResponseRedirect(request.POST['redirectTarget'])
 
@@ -71,3 +81,17 @@ def _getFilesLocation():
 
 def _getFileName(attachment):
 	return str(attachment.id) + "_" + attachment.fileName
+
+def getUserName(request):
+	userName = None
+	if request.user.is_authenticated():
+		userName = request.user.username
+	return userName
+
+def get_client_ip(request):
+	x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
+	if x_forwarded_for:
+		ip = x_forwarded_for.split(',')[0]
+	else:
+		ip = request.META.get('REMOTE_ADDR')
+	return ip

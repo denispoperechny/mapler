@@ -10,6 +10,11 @@
 			<table>
 				{{ userForm.as_table }}
 			</table>
+
+            <script>
+                $("input#id_agreement").after('I agree to the <a href="/static/license/agreement.txt">user agreement</a>');
+            </script>
+
 			<input type="submit" value="Submit" />
 		</form>
 	</p>
